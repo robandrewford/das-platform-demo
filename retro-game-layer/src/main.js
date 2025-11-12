@@ -5,12 +5,18 @@
 
 import * as PIXI from 'pixi.js';
 import { GRID_CONFIG, COLOR_SCHEME } from './config/gameConfig.js';
+import GridSystem from './core/GridSystem.js';
+import TileRenderer from './rendering/TileRenderer.js';
 
 class RetroGameLayer {
   constructor() {
     this.app = null;
     this.gameContainer = null;
+    this.gridSystem = null;
+    this.tileRenderer = null;
     this.loadingScreen = null;
+
+    this.textContainer = null; // For text labels
 
     this.init();
   }
@@ -38,6 +44,10 @@ class RetroGameLayer {
       this.gameContainer = new PIXI.Container();
       this.app.stage.addChild(this.gameContainer);
 
+      // Create text overlay container (above tiles)
+      this.textContainer = new PIXI.Container();
+      this.app.stage.addChild(this.textContainer);
+
       // Initialize game systems
       await this.initializeGameSystems();
 
@@ -45,6 +55,7 @@ class RetroGameLayer {
       this.addDebugInfo();
 
       console.log('Retro Game Layer initialized successfully');
+      console.log('Grid stats:', this.gridSystem ? this.gridSystem.getStats() : 'No grid system');
 
     } catch (error) {
       console.error('Failed to initialize Retro Game Layer:', error);
@@ -53,37 +64,65 @@ class RetroGameLayer {
   }
 
   async initializeGameSystems() {
-    // This will be expanded in future PRs
-    console.log('Initializing game systems...');
+    console.log('Initializing isometric grid system...');
 
-    // For now, just add a simple background
+    // Initialize grid system
+    this.gridSystem = new GridSystem();
+
+    // Center the grid on screen
+    this.gridSystem.updateOffset(GRID_CONFIG.canvasWidth, GRID_CONFIG.canvasHeight);
+
+    // Initialize tile renderer
+    this.tileRenderer = new TileRenderer(this.gridSystem);
+
+    // Add background
     const background = new PIXI.Graphics();
     background.beginFill(COLOR_SCHEME.background);
     background.drawRect(0, 0, GRID_CONFIG.canvasWidth, GRID_CONFIG.canvasHeight);
     background.endFill();
     this.gameContainer.addChild(background);
 
-    // Add a simple text label
-    const welcomeText = new PIXI.Text('DAS Platform Monitor', {
-      fontFamily: 'Courier New',
-      fontSize: 24,
-      fill: 0xffffff,
-      align: 'center'
-    });
-    welcomeText.anchor.set(0.5);
-    welcomeText.position.set(GRID_CONFIG.canvasWidth / 2, GRID_CONFIG.canvasHeight / 2 - 50);
-    this.gameContainer.addChild(welcomeText);
+    // Render the isometric grid
+    const gridGraphics = this.tileRenderer.renderGrid();
+    this.gameContainer.addChild(gridGraphics);
 
-    // Add instruction text
-    const instructionText = new PIXI.Text('Loading isometric grid system...', {
-      fontFamily: 'Courier New',
-      fontSize: 16,
-      fill: 0xcccccc,
-      align: 'center'
+    // Add text labels
+    this.addTextLabels();
+
+    console.log(`Rendered ${this.gridSystem.getAllCells().length} isometric tiles`);
+  }
+
+  /**
+   * Add text labels for each grid cell
+   */
+  addTextLabels() {
+    const cells = this.gridSystem.getAllCells();
+
+    cells.forEach(cell => {
+      // Create label text
+      const label = cell.getDisplayLabel();
+
+      // Create PixiJS Text object
+      const text = new PIXI.Text(label, {
+        fontFamily: 'Courier New',
+        fontSize: 10,
+        fill: 0xffffff,
+        align: 'center'
+      });
+
+      // Position text at tile center
+      const bounds = {
+        centerX: cell.gridX * GRID_CONFIG.tileWidth / 2 + this.gridSystem.offsetX,
+        centerY: cell.gridY * GRID_CONFIG.tileHeight / 2 + this.gridSystem.offsetY
+      };
+
+      text.anchor.set(0.5);
+      text.position.set(bounds.centerX, bounds.centerY);
+
+      this.textContainer.addChild(text);
     });
-    instructionText.anchor.set(0.5);
-    instructionText.position.set(GRID_CONFIG.canvasWidth / 2, GRID_CONFIG.canvasHeight / 2 + 20);
-    this.gameContainer.addChild(instructionText);
+
+    console.log(`Added ${cells.length} text labels`);
   }
 
   addDebugInfo() {
