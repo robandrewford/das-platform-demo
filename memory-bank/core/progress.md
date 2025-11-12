@@ -5,7 +5,7 @@
 ### Documentation & Architecture
 
 - ✅ **Memory Bank Complete**: All core files initialized (projectbrief, productContext, techContext, systemPatterns, activeContext)
-- ✅ **Architecture Defined**: Data mesh patterns with BRONZE/SILVER/PLATINUM schema tiers
+- ✅ **Architecture Defined**: Data mesh patterns with BRONZE/SILVER/GOLD schema tiers
 - ✅ **Compliance Framework**: HIPAA/SOC 2 controls modeled (policies, evidence, governance)
 - ✅ **Collector Patterns**: Reference designs for Kafka/S3/Kinesis ingestion microservices
 
@@ -34,7 +34,7 @@
 ### Short-term Development (Months 1-3)
 
 - 🟡 **SILVER Processing**: Deduplication and enrichment via Tasks/Dynamic Tables
-- 🟡 **PLATINUM Models**: Contract-compliant ORDER/CUSTOMER/SESSION datasets
+- 🟡 **GOLD Models**: Contract-compliant ORDER/CUSTOMER/SESSION datasets
 - 🟡 **Policy Implementation**: Email masking and regional access controls
 - 🟡 **OPS Monitoring**: Basic SLO dashboards for freshness/completeness
 
@@ -140,7 +140,7 @@
 ### Quality Measures
 
 - Target: Zero policy violations in production
-- Target: <10m P95 freshness on PLATINUM datasets
+- Target: <10m P95 freshness on GOLD datasets
 - Target: 100% compliance evidence automated collection
 
 ### Adoption Indicators

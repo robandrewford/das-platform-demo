@@ -10,7 +10,7 @@ The das-platform-demo project is a comprehensive demonstration of a modern data 
 - **Data Microservices**: Collectors for reliable data ingestion from applications/platforms
 - **Compliance-First Architecture**: HIPAA/SOC 2 controls designed-in (classification, least-privilege access, masking/row policies, auditability, contract testing, cost/risk guardrails)
 - **Technology Stack**: Snowflake database, dbt for transformations, AWS for infrastructure
-- **Schema Pattern**: BRONZE (raw), SILVER (cleaned), PLATINUM (consumer-grade), OPS (observability/compliance) schemas per domain
+- **Schema Pattern**: BRONZE (raw), SILVER (cleaned), GOLD (consumer-grade), OPS (observability/compliance) schemas per domain
 - **Policy Framework**: Tags, masking policies, row access policies, network policies for governance
 - **Collector Architecture**: Schema-validated, PII-aware ingestion pipelines with deduplication and DLQ handling
 - **Observability**: SLOs for freshness/completeness, drift detection, lineage tracking, audit evidence capture
@@ -28,7 +28,7 @@ The das-platform-demo project is a comprehensive demonstration of a modern data 
 
 - Domain databases: `BROOK_COMMERCE`, `BROOK_HEALTH` (examples)
 - Collectors: Orders, Auth events as pilots
-- Platinum datasets: ORDERS, CUSTOMERS_SCD, SESSIONS
+- Gold datasets: ORDERS, CUSTOMERS_SCD, SESSIONS
 - Policies: Email masking, regional row access, network restrictions
 - CI/CD: PR-gated testing with compliance checks
 - Monitoring: Freshness, completeness, drift, cost tracking
@@ -38,4 +38,4 @@ The das-platform-demo project is a comprehensive demonstration of a modern data 
 - Must demonstrate HIPAA-eligible patterns without storing actual PHI in demo
 - Snowflake accounts identified as HIPAA eligible with Business Associate Agreement (BAA)
 - Network security: PrivateLink, allowlisted IPs, encrypted stages
-- Retention policies: 30d bronze, 400d silver, 5y platinum (configurable per classification)
+- Retention policies: 30d bronze, 400d silver, 5y gold (configurable per classification)

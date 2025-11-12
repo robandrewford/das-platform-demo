@@ -140,7 +140,7 @@ uvicorn>=0.23.0
 
 ### Data Constraints
 
-- Time Travel retention: Configurable by classification (30d bronze, 400d silver, 5y platinum)
+- Time Travel retention: Configurable by classification (30d bronze, 400d silver, 5y gold)
 - Storage encryption: AES-256 for all stages and tables
 - Compression: Snowflake automatic optimization
 - Backup/recovery: Enterprise continuous data protection within region

@@ -7,7 +7,7 @@ Memory bank initialization completed. Project is in planning/reference implement
 ## Recent Changes
 
 - **Memory Bank Initialization**: Created core documentation structure (projectbrief.md, productContext.md, techContext.md, systemPatterns.md)
-- **Architecture Definition**: Established data mesh patterns with BRONZE/SILVER/PLATINUM tier structure
+- **Architecture Definition**: Established data mesh patterns with BRONZE/SILVER/GOLD tier structure
 - **Compliance Framework**: Documented HIPAA/SOC 2 controls including policy-as-code, evidence collection, and governance patterns
 - **Collector Patterns**: Defined microservice architecture for data ingestion with schema validation and PII handling
 
@@ -23,7 +23,7 @@ Memory bank initialization completed. Project is in planning/reference implement
 
 - **BRONZE Layer**: Orders/auth data ingestion pipelines with Snowflake Kafka Connector
 - **SILVER Transformations**: Stream/Task processing for deduplication and enrichment
-- **PLATINUM Datasets**: Contract-compliant ORDER/CUSTOMER/SESSION tables with contracts
+- **GOLD Datasets**: Contract-compliant ORDER/CUSTOMER/SESSION tables with contracts
 - **Policy Implementation**: Email masking and regional row access policies
 - **SLO Monitoring**: Basic freshness/completeness dashboards in OPS schema
 
@@ -40,7 +40,7 @@ Memory bank initialization completed. Project is in planning/reference implement
 
 - **Domain Databases**: `BROOK_<DOMAIN>` (e.g., `BROOK_COMMERCE`, `BROOK_HEALTH`)
 - **Tables**: PascalCase for entity names, snake_case for columns
-- **Roles**: `<DOMAIN>_<TIER>_<ENV>` (e.g., `COMMERCE_PLATINUM_PROD`)
+- **Roles**: `<DOMAIN>_<TIER>_<ENV>` (e.g., `COMMERCE_GOLD_PROD`)
 - **Policies**: Descriptive names with version suffixes (e.g., `MASK_EMAIL_V1`)
 
 ### Preferred Practices
@@ -116,7 +116,7 @@ Memory bank initialization completed. Project is in planning/reference implement
 - Start with order_events_v1 collector using Snowflake Kafka Connector (assumes topic exists)
 - Create dbt project structure following documented patterns
 - Implement masking macros before table creation
-- Prioritize working data flow: BRONZE → SILVER → PLATINUM for single domain
+- Prioritize working data flow: BRONZE → SILVER → GOLD for single domain
 - Establish OPS tables for SLO tracking early to inform dashboard decisions
 
 ## Dependencies and Blockers

@@ -5,7 +5,7 @@
 ### High-Level Architecture
 
 ```m
-[Source Systems] ── Collectors ──> [BRONZE] ── Tasks/Streams ──> [SILVER] ── dbt ──> [PLATINUM]
+[Source Systems] ── Collectors ──> [BRONZE] ── Tasks/Streams ──> [SILVER] ── dbt ──> [GOLD]
        │                                                           │
        └───────────────── Policies Applied ────────────────────────┘
 ```
@@ -33,17 +33,21 @@
   - Retention: Medium (400d default)
   - Usage: Domain analysis, feature tables
 
-- **PLATINUM**: Consumer-grade datasets
+- **GOLD**: Consumer-grade datasets
   - Tables: Contract-compliant, aggregation-ready
   - Policies: Row access, masking, secure sharing
   - Retention: Long (5y default)
   - Usage: Analytics, ML, external consumers
 
 - **OPS**: Observability & Compliance
-  - Tables: SLO metrics, evidence artifacts, audit logs
-  - Policies: Compliance team access only
-  - Retention: Configurable per evidence type
-  - Usage: Monitoring, certification, forensics
+  - Tables: Platform-wide performance tracking and audit evidence
+    - **Observability Tables**: SLO metrics (freshness P50/P95, completeness, data drift), Dynamic Table performance (TARGET_LAG vs. actual), task/process success rates and MTTR, lineage coverage metrics, cost tracking by domain/tier/warehouse
+    - **Audit Evidence**: ACCESS_HISTORY/LOGIN_HISTORY/QUERY_HISTORY snapshots, dbt artifacts (manifest.json, run logs, test results), policy application logs, schema change history, access review snapshots, failed login attempts, policy violations
+    - **Sovereign Views**: AGGREGATE_QUERY_HISTORY, QUERY_ACCELERATION_HISTORY, TABLE_STORAGE_METRICS for trend analysis
+  - Access: Compliance team read-only; platform engineers for evidence automation
+  - Policies: Minimal access controls (log-only), network-restricted access
+  - Retention: SLO metrics (90d), audit evidence (7y HIPAA minimum), performance history (1y)
+  - Usage: Real-time monitoring, SLO dashboarding, evidence-as-code for SOC 2, cost analysis and attribution, compliance walkthroughs
 
 #### Warehouse Isolation
 
@@ -88,7 +92,7 @@
 
 #### Tier Naming Convention
 
-- **Decision**: BRONZE/SILVER/PLATINUM vs. RAW/CURATED/SERVED or similar
+- **Decision**: BRONZE/SILVER/GOLD vs. RAW/CURATED/SERVED or similar
 - **Rationale**: Industry-standard terminology for data lakehouses
 - **Implication**: Easier hiring and cross-platform knowledge sharing
 
@@ -132,8 +136,8 @@ Contracts define data product guarantees between producers and consumers:
 # Product Contract
 name: orders_core
 schemas:
-  platinum:
-    - BROOK_COMMERCE.PLATINUM.ORDERS
+  gold:
+    - BROOK_COMMERCE.GOLD.ORDERS
 slo:
   freshness_p95: "<=10m"
   completeness: "null_rate(total_usd) <= 0.1%"
@@ -219,7 +223,7 @@ The system uses several interconnected processing paths that must be implemented
 
 - Task/Dynamic Table definitions for SILVER
 - dbt model structure with contract enforcement
-- PLATINUM dataset specifications
+- GOLD dataset specifications
 
 #### 4. Governance Layer (Ongoing)
 

@@ -28,7 +28,7 @@ The DAS (Data-as-a-Service) Platform Demo bridges this gap by providing:
 
 2. **Collectors Handle Ingestion**: Event-driven microservices pull from Kafka/S3/Kinesis, validate schemas, detect PII, and land data in `BRONZE` tier with idempotency.
 
-3. **Automated Transformations**: Streams/Tasks/Dynamic Tables promote data through `SILVER` (clean) and `PLATINUM` (consumer-grade) tiers with contract-enforced quality.
+3. **Automated Transformations**: Streams/Tasks/Dynamic Tables promote data through `SILVER` (clean) and `GOLD` (consumer-grade) tiers with contract-enforced quality.
 
 4. **Policy-as-Code Governance**: Tags classify data, masking/row policies enforce least-privilege access, network policies control connectivity.
 
@@ -71,6 +71,6 @@ The DAS (Data-as-a-Service) Platform Demo bridges this gap by providing:
 
 - Deployable in 30 days for pilot domains with full HIPAA/SOC 2 controls.
 - Zero policy violations in production usage.
-- <10m P95 freshness on critical Platinum datasets.
+- <10m P95 freshness on critical Gold datasets.
 - Evidence artifacts automatically collected for all compliance events.
 - Sub-$10K/month per domain at scale after initial setup.
