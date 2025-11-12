@@ -7,6 +7,8 @@ import * as PIXI from 'pixi.js';
 import { GRID_CONFIG, COLOR_SCHEME } from './config/gameConfig.js';
 import GridSystem from './core/GridSystem.js';
 import TileRenderer from './rendering/TileRenderer.js';
+import MouseController from './input/MouseController.js';
+import CellInfoPanel from './ui/CellInfoPanel.js';
 
 class RetroGameLayer {
   constructor() {
@@ -14,6 +16,8 @@ class RetroGameLayer {
     this.gameContainer = null;
     this.gridSystem = null;
     this.tileRenderer = null;
+    this.mouseController = null;
+    this.cellInfoPanel = null;
     this.loadingScreen = null;
 
     this.textContainer = null; // For text labels
@@ -48,6 +52,10 @@ class RetroGameLayer {
       this.textContainer = new PIXI.Container();
       this.app.stage.addChild(this.textContainer);
 
+      // Create UI overlay container (above text)
+      this.uiContainer = new PIXI.Container();
+      this.app.stage.addChild(this.uiContainer);
+
       // Initialize game systems
       await this.initializeGameSystems();
 
@@ -75,6 +83,12 @@ class RetroGameLayer {
     // Initialize tile renderer
     this.tileRenderer = new TileRenderer(this.gridSystem);
 
+    // Initialize mouse controller
+    this.mouseController = new MouseController(this.gridSystem, this.app);
+
+    // Initialize cell info panel
+    this.cellInfoPanel = new CellInfoPanel();
+
     // Add background
     const background = new PIXI.Graphics();
     background.beginFill(COLOR_SCHEME.background);
@@ -86,10 +100,49 @@ class RetroGameLayer {
     const gridGraphics = this.tileRenderer.renderGrid();
     this.gameContainer.addChild(gridGraphics);
 
+    // Store reference to grid graphics for mouse controller
+    this.gridSystem.gridGraphics = gridGraphics;
+
     // Add text labels
     this.addTextLabels();
 
+    // Add UI panel
+    this.uiContainer.addChild(this.cellInfoPanel.getContainer());
+
+    // Set up interaction callbacks
+    this.setupInteractionCallbacks();
+
     console.log(`Rendered ${this.gridSystem.getAllCells().length} isometric tiles`);
+    console.log('Mouse interaction enabled');
+  }
+
+  /**
+   * Set up callbacks for mouse interactions
+   */
+  setupInteractionCallbacks() {
+    // Update info panel when cell is selected
+    this.mouseController.onCellSelect = (selectedCell, previousCell) => {
+      this.cellInfoPanel.showCellInfo(selectedCell);
+    };
+
+    // Handle cell clicks (could trigger additional actions)
+    this.mouseController.onCellClick = (cell) => {
+      console.log('Cell clicked:', cell.serviceName);
+    };
+
+    // Handle hover changes (optional)
+    this.mouseController.onCellHover = (hoveredCell, previousCell) => {
+      // Could add hover effect to UI elements
+    };
+  }
+
+  /**
+   * Update UI positions on resize
+   */
+  updateUI() {
+    if (this.cellInfoPanel && this.cellInfoPanel.isVisible()) {
+      this.cellInfoPanel.updatePosition(this.app.screen.width, this.app.screen.height);
+    }
   }
 
   /**
